@@ -11,8 +11,10 @@ RUN apt-get update && apt-get install -y \
   vim
 
 RUN conda install -c conda-forge -c bioconda snakemake drop
+RUN pip install git+git://github.com/gagneurlab/drop@bsgenome --upgrade
 WORKDIR /drop-demo
 RUN drop demo
 RUN snakemake -n 
+RUN R -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
 
 WORKDIR /
