@@ -16,5 +16,6 @@ WORKDIR /drop-demo
 RUN drop demo
 RUN snakemake -n 
 RUN R -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
+RUN R -e "BiocManager::install('BSgenome.Hsapiens.NCBI.GRCh38')"
 
 WORKDIR /
