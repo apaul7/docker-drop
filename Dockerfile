@@ -5,26 +5,46 @@ LABEL \
   description="Image for running drop, https://github.com/gagneurlab/drop"
 
 RUN apt-get update && apt-get install -y \
+  bc \
   build-essential \
+  graphviz \
   git \
   vim
 
-RUN conda install -c conda-forge r-base r-essentials
-#RUN conda install -c conda-forge -c bioconda snakemake drop
-RUN conda install -c conda-forge -c bioconda snakemake
-RUN pip install git+git://github.com/gagneurlab/drop@dev
-WORKDIR /drop-demo
-RUN drop demo
-RUN snakemake -n 
-RUN R -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
-RUN R -e "BiocManager::install('BSgenome.Hsapiens.NCBI.GRCh38')"
-#RUN R -e "install.packages('XML',dependencies=TRUE, repos='http://cran.rstudio.com/')"
-#RUN R -e "install.packages('ggrepel',dependencies=TRUE, repos='http://cran.rstudio.com/')"
-#RUN apt-get install -y libgit2-dev
-#RUN R -e "BiocManager::install('GenomicFeatures')"
-#RUN R -e "BiocManager::install('XML')"
-#ENV LIBXML_LIBDIR="/opt/conda/include/libxml2/libxml/"
-#ENV LIBXML_INCDIR="/opt/conda/include/libxml2/libxml/"
-#ENV XML_CONFIG="/opt/conda/bin/xml2-config"
-#RUN R -e "BiocManager::install('c-mertes/FRASER', dependencies=TRUE, update=FALSE)"
+RUN conda create -y -c conda-forge -c bioconda -n drop \
+  bcftools \
+  gatk4 \
+  git \
+  pip \
+  "python>=3.8" \
+  "r-base>=4.0.3" \
+  r-essentials \
+  r-xml \
+  samtools
+
+RUN echo "conda activate drop" >> ~/.bashrc
+ENV PATH "/opt/conda/envs/drop/bin:$PATH"
+
+RUN R -e "install.packages(c('BiocManager', 'XML'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "BiocManager::install(c('cowplot', 'data.table', 'DelayedMatrixStats', 'devtools', 'dplyr', 'ggplot2', 'ggthemes', 'knitr', 'magrittr', 'remotes', 'rmarkdown', 'tidyr', 'VariantAnnotation'), ask=FALSE)"
+
+RUN R -e "BiocManager::install(c('gagneurlab/OUTRIDER', 'c-mertes/FRASER', 'mumichae/tMAE'), ask=FALSE, update=FALSE)"
+RUN R -e "BiocManager::install(c('BSgenome.Hsapiens.UCSC.hg19', 'BSgenome.Hsapiens.UCSC.hg38', 'BSgenome.Hsapiens.NCBI.GRCh38'), ask=FALSE, update=FALSE)"
+
+
+# it was af0b1accc29da921988526437fb11908322aff54 built 2/8/21
+#RUN pip install git+git://github.com/gagneurlab/drop@dev
+
+ENV DROP_COMMIT af0b1accc29da921988526437fb11908322aff54
+WORKDIR /git
+RUN git clone https://github.com/gagneurlab/drop.git
+WORKDIR /git/drop
+RUN git checkout $DROP_COMMIT
+RUN pip install -e /git/drop/
+
+# check if install worked
+#WORKDIR /drop-demo
+#RUN drop demo
+#RUN snakemake -n
+
 WORKDIR /
