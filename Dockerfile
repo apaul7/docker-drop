@@ -5,12 +5,19 @@ LABEL \
   description="Image for running drop, https://github.com/gagneurlab/drop"
 
 RUN apt-get update && apt-get install -y \
+  bc \
   build-essential \
+  graphviz \
   git \
-  libxml2-dev \
   vim
 
-RUN conda install -c conda-forge -c bioconda snakemake drop
+RUN conda create -y -c conda-forge -c bioconda -n drop \
+  "drop=1.0.3" \
+  snakemake
+
+RUN echo "conda activate drop" >> ~/.bashrc
+ENV PATH "/opt/conda/envs/drop/bin:$PATH"
+
 WORKDIR /drop-demo
 RUN drop demo
 RUN snakemake -n 
