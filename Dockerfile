@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3:4.9.2
+FROM continuumio/miniconda3:4.10.3
 MAINTAINER Alexander Paul <alex.paul@.wustl.edu>
 
 LABEL \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
   vim
 
 RUN conda create -y -c conda-forge -c bioconda -n drop \
-  "drop=1.0.3" \
+  "drop=1.1.4" \
   snakemake
 
 RUN echo "conda activate drop" >> ~/.bashrc
