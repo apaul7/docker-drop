@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   graphviz \
   git \
+  unzip \
   vim
 
 RUN conda create -y -c conda-forge -c bioconda -n drop \
@@ -22,7 +23,7 @@ WORKDIR /drop-demo
 RUN drop demo
 RUN snakemake -n 
 
-RUN /bin/sh -c R -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
-RUN /bin/sh -c R -e "BiocManager::install('BSgenome.Hsapiens.NCBI.GRCh38')"
+RUN /bin/sh -c "R --vanilla" -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
+RUN /bin/sh -c "R --vanilla" -e "BiocManager::install('BSgenome.Hsapiens.NCBI.GRCh38')"
 
 WORKDIR /
