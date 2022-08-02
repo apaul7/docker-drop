@@ -19,11 +19,4 @@ RUN conda create -y -c conda-forge -c bioconda -n drop \
 RUN echo "conda activate drop" >> ~/.bashrc
 ENV PATH "/opt/conda/envs/drop/bin:$PATH"
 
-WORKDIR /drop-demo
-RUN drop demo
-RUN snakemake -n 
-
-RUN /bin/sh -c "R --vanilla" -e "BiocManager::install('BSgenome.Hsapiens.UCSC.hg38')"
-RUN /bin/sh -c "R --vanilla" -e "BiocManager::install('BSgenome.Hsapiens.NCBI.GRCh38')"
-
 WORKDIR /
