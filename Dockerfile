@@ -1,8 +1,8 @@
-FROM continuumio/miniconda3:4.12.0
-MAINTAINER Alexander Paul <alex.paul@.wustl.edu>
+FROM continuumio/miniconda3:24.11.1-0
 
 LABEL \
-  description="Image for running drop, https://github.com/gagneurlab/drop"
+  description="Image for running drop, https://github.com/gagneurlab/drop" \
+  mainteiner="Alexander Paul <alex.paul@wustl.edu>"
 
 RUN apt-get update && apt-get install -y \
   bc \
