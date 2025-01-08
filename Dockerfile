@@ -12,11 +12,8 @@ RUN apt-get update && apt-get install -y \
   unzip \
   vim
 
-RUN conda create -y -c conda-forge -c bioconda -n drop \
-  "drop=1.2.1" \
-  snakemake
-
-RUN echo "conda activate drop" >> ~/.bashrc
-ENV PATH "/opt/conda/envs/drop/bin:$PATH"
-
+WORKDIR /tmp/
+RUN wget https://www.cmm.in.tum.de/public/paper/drop_analysis/DROP_1.4.0.yaml
+RUN conda install conda-forge::mamba
+RUN mamba env create -f DROP_1.4.0.yaml
 WORKDIR /
